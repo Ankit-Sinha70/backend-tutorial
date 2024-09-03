@@ -1,8 +1,8 @@
 // promise method //
 
-const asyncHandler = () => {
+const asyncHandler = (reqHandler) => {
   return (req, res, next) => {
-    Promise.resolve(asyncHandler(req, res, next)).catch((error) =>
+    Promise.resolve(reqHandler(req, res, next)).catch((error) =>
       console.error("Failed To Execute", error)
     );
   };
