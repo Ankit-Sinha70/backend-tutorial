@@ -2,9 +2,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { User } from "../models/user.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  console.log("req.body: ", req.body);
   const { fullName, email, password, username } = req.body;
   console.log("email", email);
 
@@ -16,7 +16,7 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // check if user is also exist
-  const existedUser = User.findOne({
+  const existedUser = await User.findOne({
     $or: [{ username }, { email }],
   });
   if (existedUser) {
@@ -26,7 +26,6 @@ const registerUser = asyncHandler(async (req, res) => {
   //check for image and avatar
   const avatarLocalPath = req.files?.avatar[0]?.path;
   const imageLocalPath = req.files?.coverImage[0]?.path;
-
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
   }
@@ -40,13 +39,16 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   //create user object-entry in db
-  const user = await User.create({
+  const user = new User({
     fullName,
     avatar: avatar.url,
     coverImage: coverImage?.url || "",
     email,
     username: username.toLowerCase(),
+    password
   });
+
+  await user.save();
 
   //remove password and refreshToken field from respons
   const createdUser = await User.findById(user._id).select(
