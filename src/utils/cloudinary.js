@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-import { config as dotenvConfig } from 'dotenv';
-
+import { config as dotenvConfig } from "dotenv";
 
 dotenvConfig();
 
@@ -18,7 +17,6 @@ const uploadOnCloudinary = async (filePath) => {
     const response = await cloudinary.uploader.upload(filePath, {
       resource_type: "auto",
     });
-    console.log('response: ', response);
     return response;
   } catch (error) {
     fs.unlinkSync(filePath);
@@ -32,7 +30,6 @@ const optimizeUrl = cloudinary.url("shoes", {
   fetch_format: "auto",
   quality: "auto",
 });
-
 console.log(optimizeUrl);
 
 // Transform the image: auto-crop to square aspect_ratio
@@ -42,5 +39,4 @@ const autoCropUrl = cloudinary.url("shoes", {
   width: 500,
   height: 500,
 });
-
 console.log(autoCropUrl);

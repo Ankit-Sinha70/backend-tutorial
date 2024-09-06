@@ -263,7 +263,6 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 // UPDATE THE FILES
-
 const updateUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path;
   if (!avatarLocalPath) {
@@ -275,8 +274,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading on avatar");
   }
 
-  //update avatar
-   const user = await User.findByIdAndUpdate(
+  //update avatar image
+  const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
       $set: {
@@ -301,7 +300,7 @@ const updateCoverImageAvatar = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Error while uploading on avatar");
   }
 
-  //update avatar
+  //update cover image
   const user = await User.findByIdAndUpdate(
     req.user?._id,
     {
@@ -325,5 +324,5 @@ export {
   getCurrentUser,
   updateAccountDetails,
   updateUserAvatar,
-  updateCoverImageAvatar
+  updateCoverImageAvatar,
 };
